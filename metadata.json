@@ -1,0 +1,6 @@
+{
+  "name": "온라인 상담 접수 서비스",
+  "description": "제목과 상담 요청 내용을 입력하고 실시간으로 저장 및 확인할 수 있는 상담 서비스 페이지",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,59 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidConsultation(data) {
+      return (
+        data.keys().hasAll(['title', 'content', 'category', 'status', 'authorId', 'authorName', 'authorEmail', 'createdAt', 'updatedAt']) &&
+        data.title is string &&
+        data.title.size() >= 1 &&
+        data.title.size() <= 100 &&
+        data.content is string &&
+        data.content.size() >= 1 &&
+        data.content.size() <= 3000 &&
+        data.category in ['general', 'service', 'pricing', 'other'] &&
+        data.status in ['pending', 'in_progress', 'completed'] &&
+        data.authorId is string &&
+        data.authorId.size() <= 128 &&
+        data.authorName is string &&
+        data.authorName.size() <= 100 &&
+        data.authorEmail is string &&
+        data.authorEmail.size() <= 120
+      );
+    }
+
+    match /consultations/{consultationId} {
+      allow read: if isValidId(consultationId);
+      allow create: if isValidId(consultationId) && isValidConsultation(incoming());
+      allow update: if isValidId(consultationId);
+      allow delete: if isValidId(consultationId);
+    }
+
+    match /users/{userId} {
+      allow read, write: if isValidId(userId);
+    }
+
+    // Connection testing doc
+    match /test/connection {
+      allow read: if true;
+    }
+
+    // Default deny for unspecified collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

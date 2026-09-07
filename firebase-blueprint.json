@@ -1,0 +1,126 @@
+{
+  "entities": {
+    "Consultation": {
+      "title": "Consultation",
+      "description": "사용자가 접수한 상담 요청 데이터",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "상담 요청 제목",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "content": {
+          "type": "string",
+          "description": "상담 요청 상세 내용",
+          "minLength": 1,
+          "maxLength": 3000
+        },
+        "category": {
+          "type": "string",
+          "description": "상담 분류",
+          "enum": ["general", "service", "pricing", "other"]
+        },
+        "status": {
+          "type": "string",
+          "description": "상담 처리 상태 (대기, 진행중, 완료)",
+          "enum": ["pending", "in_progress", "completed"]
+        },
+        "authorId": {
+          "type": "string",
+          "description": "작성자 UID",
+          "maxLength": 128
+        },
+        "authorName": {
+          "type": "string",
+          "description": "작성자 닉네임/이름",
+          "maxLength": 100
+        },
+        "authorEmail": {
+          "type": "string",
+          "description": "작성자 이메일",
+          "maxLength": 120
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "상담 접수 일시"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "수정 일시"
+        },
+        "adminReply": {
+          "type": "string",
+          "description": "관리자 답변 내용",
+          "maxLength": 3000
+        }
+      },
+      "required": [
+        "title",
+        "content",
+        "category",
+        "status",
+        "authorId",
+        "authorName",
+        "authorEmail",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AppUser": {
+      "title": "AppUser",
+      "description": "애플리케이션 가입 회원 정보",
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "사용자 아이디",
+          "minLength": 2,
+          "maxLength": 50
+        },
+        "password": {
+          "type": "string",
+          "description": "사용자 비밀번호",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "displayName": {
+          "type": "string",
+          "description": "사용자 성명 / 닉네임",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "role": {
+          "type": "string",
+          "description": "사용자 권한 (admin 또는 user)",
+          "enum": ["admin", "user"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "가입 일시"
+        }
+      },
+      "required": [
+        "username",
+        "password",
+        "displayName",
+        "role",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/consultations/{consultationId}": {
+      "schema": "Consultation",
+      "description": "상담 신청 내역 컬렉션"
+    },
+    "/users/{userId}": {
+      "schema": "AppUser",
+      "description": "회원 계정 정보 컬렉션"
+    }
+  }
+}
